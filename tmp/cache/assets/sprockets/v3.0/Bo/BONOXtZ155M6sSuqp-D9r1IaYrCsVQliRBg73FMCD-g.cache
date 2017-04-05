@@ -1,0 +1,120 @@
+I"~(function() {
+  var coefficients;
+
+  coefficients = {
+    1: 1,
+    2: .943,
+    3: .906,
+    4: .881,
+    5: .851,
+    6: .831,
+    7: .807,
+    8: .786,
+    9: .765,
+    10: .744
+  };
+
+  this.LiftForm = React.createClass({
+    getInitialState: function() {
+      return {
+        date: '',
+        liftname: '',
+        ismetric: false,
+        weightlifted: '',
+        repsperformed: '',
+        onerm: '0'
+      };
+    },
+    handleValueChange: function(e) {
+      var obj, valueName;
+      valueName = e.target.name;
+      return this.setState((
+        obj = {},
+        obj["" + valueName] = e.target.value,
+        obj
+      ));
+    },
+    toggleUnit: function(e) {
+      e.preventDefault();
+      return this.setState({
+        ismetric: !this.state.ismetric
+      });
+    },
+    calculateOneRm: function() {
+      if (this.state.weightlifted && this.state.repsperformed) {
+        return this.state.onerm = this.state.weightlifted / coefficients[this.state.repsperformed];
+      } else {
+        return 0;
+      }
+    },
+    valid: function() {
+      return this.state.date && this.state.liftname && this.state.weightlifted && this.state.repsperformed && this.state.onerm;
+    },
+    handleSubmit: function(e) {
+      e.preventDefault();
+      return $.post('', {
+        lift: this.state
+      }, (function(_this) {
+        return function(data) {
+          _this.props.handleNewLift(data);
+          return _this.setState(_this.getInitialState());
+        };
+      })(this), 'JSON');
+    },
+    render: function() {
+      return React.DOM.form({
+        className: 'form-inline',
+        onSubmit: this.handleSubmit
+      }, React.DOM.div({
+        className: 'form-group'
+      }, React.DOM.input({
+        type: 'date',
+        className: 'form-control',
+        placeholder: 'date',
+        name: 'date',
+        value: this.state.date,
+        onChange: this.handleValueChange
+      })), React.DOM.div({
+        className: 'form-group'
+      }, React.DOM.input({
+        type: 'text',
+        className: 'form-control',
+        placeholder: 'liftname',
+        name: 'liftname',
+        value: this.state.liftname,
+        onChange: this.handleValueChange
+      })), React.DOM.div({
+        className: 'form-group'
+      }, React.DOM.input({
+        type: 'number',
+        className: 'form-control',
+        placeholder: 'weightlifted',
+        name: 'weightlifted',
+        value: this.state.weightlifted,
+        onChange: this.handleValueChange
+      })), React.DOM.div({
+        className: 'form-group'
+      }, React.DOM.input({
+        type: 'number',
+        min: 1,
+        max: 10,
+        className: 'form-control',
+        placeholder: 'repsperformed',
+        name: 'repsperformed',
+        value: this.state.repsperformed,
+        onChange: this.handleValueChange
+      })), React.DOM.button({
+        className: 'btn btn-primary',
+        onClick: this.toggleUnit
+      }, 'Metric = ' + this.state.ismetric.toString()), React.DOM.button({
+        type: 'submit',
+        className: 'btn btn-primary',
+        disabled: !this.valid()
+      }, 'Create Lift'), React.createElement(OneRmBox, {
+        onerm: this.calculateOneRm()
+      }));
+    }
+  });
+
+}).call(this);
+:ET

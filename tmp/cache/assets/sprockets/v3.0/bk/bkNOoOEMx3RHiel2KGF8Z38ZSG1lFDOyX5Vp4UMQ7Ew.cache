@@ -1,0 +1,69 @@
+I"Z(function() {
+  this.Projects = React.createClass({
+    getInitialState: function() {
+      return {
+        projects: this.props.data
+      };
+    },
+    getDefaultProps: function() {
+      return {
+        projects: []
+      };
+    },
+    addProjects: function(project) {
+      var projects;
+      projects = this.state.projects.slice();
+      projects.push(project);
+      return this.setState({
+        projects: projects
+      });
+    },
+    deleteproject: function(project) {
+      var index, projects;
+      projects = this.state.projects.slice();
+      index = projects.indexOf(project);
+      projects.splice(index, 1);
+      return this.replaceState({
+        projects: projects
+      });
+    },
+    updateproject: function(project, data) {
+      var index, projects;
+      index = this.state.projects.indexOf(project);
+      projects = React.addons.update(this.state.projects, {
+        $splice: [[index, 1, data]]
+      });
+      return this.replaceState({
+        projects: projects
+      });
+    },
+    render: function() {
+      var project;
+      return React.DOM.div({
+        className: 'projects'
+      }, React.DOM.h1({
+        className: 'title'
+      }, 'projects'), React.createElement(projectForm, {
+        handleNewproject: this.addproject
+      }), React.DOM.table({
+        className: 'table table-bordered'
+      }, React.DOM.thead(null, React.DOM.tr(null, React.DOM.th(null, 'Date'), React.DOM.th(null, 'project Name'), React.DOM.th(null, 'language'), React.DOM.th(null, 'Reps Performed'), React.DOM.th(null, '1 RM'), React.DOM.th(null, 'Metric?'), React.DOM.th(null, 'Actions'))), React.DOM.tbody(null, (function() {
+        var i, len, ref, results;
+        ref = this.state.projects;
+        results = [];
+        for (i = 0, len = ref.length; i < len; i++) {
+          project = ref[i];
+          results.push(React.createElement(project, {
+            key: project.id,
+            project: project,
+            handleDeleteproject: this.deleteproject,
+            handleEditproject: this.updateproject
+          }));
+        }
+        return results;
+      }).call(this))));
+    }
+  });
+
+}).call(this);
+:ET
