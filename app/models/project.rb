@@ -1,9 +1,8 @@
-class Project < ApplicationRecord
+class Projects < ApplicationRecord
 
-	 
-
+	
   	 
-  	#get '/help', to:  'projects#help'
+  	get '/new', to:  'projects#new'
 	validates :genius, :completed, :description, :comments, 
 	validates :projectname, 
 	

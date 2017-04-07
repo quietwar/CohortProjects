@@ -9,7 +9,7 @@ Bundler.require(*Rails.groups)
 module Project
   class Application < Rails::Application
 
-    #config.react.addons = true
+    config.react.addons = true
 
   end
 end
